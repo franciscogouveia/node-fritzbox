@@ -18,10 +18,9 @@ internals.enable = function enableForwarding(sid, callback) {
       }
     },
     function (error, response, body) {
-      return console.log(body);
 
-      if (!error && response.statusCode == 200) {
-        console.log(body)
+      if(error) {
+        return callback(error);
       }
 
       callback(null, body);
@@ -41,10 +40,9 @@ internals.disable = function disableForwarding(sid, callback) {
       }
     },
     function (error, response, body) {
-      return console.log(body);
 
-      if (!error && response.statusCode == 200) {
-        console.log(body)
+      if(error) {
+        return callback(error);
       }
 
       callback(null, body);
