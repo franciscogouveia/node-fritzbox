@@ -4,6 +4,8 @@ var request = require('request');
 
 require('dotenv').config({silent: true});
 
+var host = process.env.FB_HOST || 'fritz.box';
+
 if(process.argv.length < 3) {
 	console.log('Lack of parameters.\nUsage: node index.js <command> [<param>, ...]');
 	process.exit(1);
@@ -33,16 +35,16 @@ try {
 
     var login = require('./modules/login');
 
-    login(null, [process.env.FRITZBOX], function(err, result) {
+    login(host, null, [process.env.FB_PASSWORD], function(err, result) {
       if(err) {
         return console.log('Could not login: ' + err);
       }
 
-      mod.call(null, result.sid, process.argv.slice(3), callback);
+      mod.call(null, host, result.sid, process.argv.slice(3), callback);
     });
   } else {
 
-    mod.call(process.env.FRITZBOX, '00000000000', process.argv.slice(3), callback);
+    mod.call(null, host, '00000000000', process.argv.slice(3), callback);
   }
 } catch(e) {
   if(e.code === 'MODULE_NOT_FOUND') {
