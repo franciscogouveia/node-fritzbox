@@ -1,10 +1,10 @@
 'use strict';
 
 var request = require('request');
+var crypto = require('crypto');
 var xml2js = new require('xml2js').Parser();
 
 var internals = {};
-
 
 /**
  * Obtain session info, including challenge.
@@ -13,19 +13,22 @@ var internals = {};
  *  {
  *    sid: '0000000000000000',
  *    challenge: 'xxxxxx',
- *    blocktime: '0',
- *    rights: [ '' ]
+ *    blocktime: '0'
  *  }
  **/
 internals.getSessionInfo = function getSessionInfo(callback) {
+
   request.get('http://192.168.1.1/login_sid.lua', function(err, response, body) {
     xml2js.parseString(body, function(err, data) {
 
-      callback(err, {
+      if(err) {
+        return callback(err);
+      }
+
+      callback(null, {
         sid: data.SessionInfo.SID[0],
         challenge: data.SessionInfo.Challenge[0],
-        blocktime: data.SessionInfo.BlockTime[0],
-        rights: data.SessionInfo.Rights
+        blocktime: data.SessionInfo.BlockTime[0]
       });
     });
   });
@@ -57,41 +60,75 @@ internals.getPassword = function getPassword(parameters, callback) {
   });
 };
 
-/**
- * Attempts to login
- **/
-internals.login = function _login(sid, challenge, password, callback) {
-  return;
-  request.post(
-    'http://192.168.1.1/',
-    { form: { key: 'value' } },
-    function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log(body)
-      }
+internals.authenticate = function authenticate(content, callback) {
+  request.get('http://192.168.1.1/login_sid.lua?username=&response=' + content, function(err, response, body) {
+
+    if(err) {
+      return callback(err);
     }
-  );
+
+    xml2js.parseString(body, function(err, data) {
+
+      if(err) {
+        return callback(err);
+      }
+
+      if(data.SessionInfo.SID[0] === '0000000000000000') {
+        return callback(new Error('Wrong password. Blocked for ' + data.SessionInfo.BlockTime[0] + ' seconds.'));
+      }
+
+      callback(null, {
+        sid: data.SessionInfo.SID[0],
+        challenge: data.SessionInfo.Challenge[0],
+        blocktime: data.SessionInfo.BlockTime[0]
+      });
+    });
+  });
+}
+
+/**
+ * Generates an hash from the password and the challenge and logs-in
+ **/
+internals.login = function login(sid, challenge, password, callback) {
+
+  if(!callback || !(callback instanceof Function)) {
+    throw new Error('Wrong usage of login module. Callback is missing or is not a function.');
+  }
+
+  var concat = challenge + "-" + password;
+
+  // Create md5 hash
+  var md5 = crypto.createHash('md5');
+  md5.update(concat, 'ucs2'); // 16 - Unicode
+  var digest = md5.digest('hex');
+
+  var result = challenge + '-' + digest;
+
+  // Procede to authentication
+  internals.authenticate(result, callback);
 };
 
-module.exports = function login(sid, parameters, callback) {
+module.exports = function main(sid, parameters, callback) {
 
   internals.getSessionInfo(function(err, result) {
     if(err) {
-      return console.log(err);
+      return callback(err);
     }
 
-    console.log(result);
+    if(result.sid === '0000000000000000') {
+      // Authenticate
 
-    var sid = result.sid,
-        challenge = result.challenge;
+      internals.getPassword(parameters, function(err, password) {
+        if(err) {
+          return callback(err);
+        }
 
-    internals.getPassword(parameters, function(err, password) {
-
-      internals.login(result.sid, result.challenge, password, callback);
-    });
+        internals.login(result.sid, result.challenge, password, callback);
+      });
+    } else {
+      callback(null, result);
+    }
   });
-
-
 };
 
 module.exports.auth = false;
