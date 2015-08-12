@@ -65,6 +65,9 @@ internals.getPassword = function getPassword(parameters, callback) {
   });
 };
 
+/**
+ * Makes the authentication request to Fritzbox with the hashed content and challenge
+ **/
 internals.authenticate = function authenticate(host, content, callback) {
   request.get('http://' + host + '/login_sid.lua?username=&response=' + content, function(err, response, body) {
 
@@ -92,7 +95,7 @@ internals.authenticate = function authenticate(host, content, callback) {
 }
 
 /**
- * Generates an hash from the password and the challenge and logs-in
+ * Generates an hash from the password and the challenge and calls authentication
  **/
 internals.login = function login(host, sid, challenge, password, callback) {
 
@@ -113,6 +116,9 @@ internals.login = function login(host, sid, challenge, password, callback) {
   internals.authenticate(host, result, callback);
 };
 
+/**
+ * The exposed function
+ **/
 module.exports = function main(host, sid, parameters, callback) {
 
   internals.getSessionInfo(host, function(err, result) {
@@ -136,4 +142,7 @@ module.exports = function main(host, sid, parameters, callback) {
   });
 };
 
+/**
+ * This is the authentication module, doesn't require authentication
+ **/
 module.exports.auth = false;
