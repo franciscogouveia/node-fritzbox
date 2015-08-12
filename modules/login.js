@@ -16,9 +16,14 @@ var internals = {};
  *    blocktime: '0'
  *  }
  **/
-internals.getSessionInfo = function getSessionInfo(callback) {
+internals.getSessionInfo = function getSessionInfo(host, callback) {
 
-  request.get('http://192.168.1.1/login_sid.lua', function(err, response, body) {
+  request.get('http://' + host + '/login_sid.lua', function(err, response, body) {
+
+    if(err) {
+      return callback(err);
+    }
+
     xml2js.parseString(body, function(err, data) {
 
       if(err) {
@@ -60,8 +65,8 @@ internals.getPassword = function getPassword(parameters, callback) {
   });
 };
 
-internals.authenticate = function authenticate(content, callback) {
-  request.get('http://192.168.1.1/login_sid.lua?username=&response=' + content, function(err, response, body) {
+internals.authenticate = function authenticate(host, content, callback) {
+  request.get('http://' + host + '/login_sid.lua?username=&response=' + content, function(err, response, body) {
 
     if(err) {
       return callback(err);
@@ -89,7 +94,7 @@ internals.authenticate = function authenticate(content, callback) {
 /**
  * Generates an hash from the password and the challenge and logs-in
  **/
-internals.login = function login(sid, challenge, password, callback) {
+internals.login = function login(host, sid, challenge, password, callback) {
 
   if(!callback || !(callback instanceof Function)) {
     throw new Error('Wrong usage of login module. Callback is missing or is not a function.');
@@ -105,12 +110,12 @@ internals.login = function login(sid, challenge, password, callback) {
   var result = challenge + '-' + digest;
 
   // Procede to authentication
-  internals.authenticate(result, callback);
+  internals.authenticate(host, result, callback);
 };
 
-module.exports = function main(sid, parameters, callback) {
+module.exports = function main(host, sid, parameters, callback) {
 
-  internals.getSessionInfo(function(err, result) {
+  internals.getSessionInfo(host, function(err, result) {
     if(err) {
       return callback(err);
     }
@@ -123,7 +128,7 @@ module.exports = function main(sid, parameters, callback) {
           return callback(err);
         }
 
-        internals.login(result.sid, result.challenge, password, callback);
+        internals.login(host, result.sid, result.challenge, password, callback);
       });
     } else {
       callback(null, result);
