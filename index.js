@@ -23,7 +23,7 @@ try {
       return console.log(err);
     }
 
-    console.log(result);
+    console.log('Done!');
   };
 
   // By default, modules require authentication
@@ -31,7 +31,7 @@ try {
 
     var login = require('./modules/login');
 
-    login(null, [], function(err, result) {
+    login(null, [process.env.FRITZBOX], function(err, result) {
       if(err) {
         return console.log('Could not login: ' + err);
       }
@@ -40,7 +40,7 @@ try {
     });
   } else {
 
-    mod.call(null, '00000000000', process.argv.slice(3), callback);
+    mod.call(process.env.FRITZBOX, '00000000000', process.argv.slice(3), callback);
   }
 } catch(e) {
   if(e.code === 'MODULE_NOT_FOUND') {
@@ -50,15 +50,3 @@ try {
   }
   process.exit(1);
 }
-
-/*
-request.post(
-  'http://www.yoursite.com/formpage',
-  { form: { key: 'value' } },
-  function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      console.log(body)
-    }
-  }
-);
-*/
