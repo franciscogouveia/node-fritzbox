@@ -5,11 +5,21 @@ var request = require('request');
 var internals = {};
 
 internals.enable = function enableForwarding(sid, callback) {
-  return;
   request.post(
-    'http://192.168.1.1/',
-    { form: { key: 'value' } },
+    'http://192.168.1.1/internet/port_fw.lua',
+    {
+      form: {
+        active_1: 1,
+        active_2: 1,
+        active_3: 1,
+        box_upnp_control_activated: 1,
+        sid: sid,
+        apply: ''
+      }
+    },
     function (error, response, body) {
+      return console.log(body);
+
       if (!error && response.statusCode == 200) {
         console.log(body)
       }
@@ -20,11 +30,19 @@ internals.enable = function enableForwarding(sid, callback) {
 };
 
 internals.disable = function disableForwarding(sid, callback) {
-  return;
   request.post(
-    'http://192.168.1.1/',
-    { form: { key: 'value' } },
+    'http://192.168.1.1/internet/port_fw.lua',
+    {
+      form: {
+        active_3: 1,
+        box_upnp_control_activated: 1,
+        sid: sid,
+        apply: ''
+      }
+    },
     function (error, response, body) {
+      return console.log(body);
+
       if (!error && response.statusCode == 200) {
         console.log(body)
       }
@@ -41,11 +59,10 @@ module.exports = function portForwarding(sid, params, callback) {
     return;
   }
 
-  if(['enable', 'disable'].indexOf(setStatus) === -1) {
+  if(['enable', 'disable'].indexOf(params[0]) === -1) {
     console.log('Wrong parameter.\nUsage: node index.js port-forwarding [enable|disable]');
     return;
   }
 
-  internals[setStatus].call(null, sid, callback);
-
+  internals[params[0]].call(null, sid, callback);
 };
