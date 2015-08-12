@@ -1,0 +1,20 @@
+{
+  "name": "node-fritzbox",
+  "version": "1.0.0",
+  "description": "Access the Fritzbox through node",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "fritz",
+    "box",
+    "api"
+  ],
+  "author": "Francisco de Gouveia",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.60.0",
+    "xml2js": "^0.4.10"
+  }
+}
