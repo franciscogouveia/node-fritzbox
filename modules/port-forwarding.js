@@ -4,9 +4,9 @@ var request = require('request');
 
 var internals = {};
 
-internals.enable = function enableForwarding(sid, callback) {
+internals.enable = function enableForwarding(host, sid, callback) {
   request.post(
-    'http://192.168.1.1/internet/port_fw.lua',
+    'http://' + host + '/internet/port_fw.lua',
     {
       form: {
         active_1: 1,
@@ -28,9 +28,9 @@ internals.enable = function enableForwarding(sid, callback) {
   );
 };
 
-internals.disable = function disableForwarding(sid, callback) {
+internals.disable = function disableForwarding(host, sid, callback) {
   request.post(
-    'http://192.168.1.1/internet/port_fw.lua',
+    'http://' + host + '/internet/port_fw.lua',
     {
       form: {
         active_3: 1,
@@ -50,7 +50,7 @@ internals.disable = function disableForwarding(sid, callback) {
   );
 };
 
-module.exports = function portForwarding(sid, params, callback) {
+module.exports = function portForwarding(host, sid, params, callback) {
 
   if(!params.length) {
     console.log('Missing parameter.\nUsage: node index.js port-forwarding [enable|disable]');
@@ -62,5 +62,5 @@ module.exports = function portForwarding(sid, params, callback) {
     return;
   }
 
-  internals[params[0]].call(null, sid, callback);
+  internals[params[0]].call(null, host, sid, callback);
 };
