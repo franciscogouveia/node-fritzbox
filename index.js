@@ -2,6 +2,8 @@
 
 var request = require('request');
 
+require('dotenv').config({silent: true});
+
 if(process.argv.length < 3) {
 	console.log('Lack of parameters.\nUsage: node index.js <command> [<param>, ...]');
 	process.exit(1);
