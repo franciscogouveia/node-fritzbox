@@ -31,7 +31,7 @@ try {
 
     var login = require('./modules/login');
 
-    login(null, function(err, result) {
+    login(null, [], function(err, result) {
       if(err) {
         return console.log('Could not login: ' + err);
       }
