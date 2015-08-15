@@ -1,6 +1,11 @@
 'use strict';
 
 var request = require('request');
+var xml2js = new require('xml2js').Parser({
+  'strict': false,
+  'trim': true,
+  'normalize': true
+});
 
 var internals = {};
 
@@ -59,17 +64,60 @@ internals.disable = function disableForwarding(host, sid, callback) {
 };
 
 /**
+ * Lists the current forwardings
+ **/
+internals.list = function listForwarding(host, sid, callback) {
+  request.get(
+    'http://' + host + '/internet/port_fw.lua?sid=' + sid,
+    function(error, response, body) {
+
+      if(error) {
+        return callback(error);
+      }
+
+      // Find <table> element with the information we want and strip it out
+      var content = body.substr(body.indexOf('<table id="uiPorts"'));
+      content = content.substr(0, content.indexOf('</table>') + '</table>'.length);
+
+      xml2js.parseString(content, function(err, data) {
+
+        if(err) {
+          return callback(err);
+        }
+
+        var list = [];
+
+        // First row is header
+        for(var i = 1; i < data.TABLE.TR.length; i++) {
+          var row = data.TABLE.TR[i].TD;
+
+          var id = row[0].INPUT[0].$.NAME;
+          var name = row[1].NOBR[0].SPAN[0]._;
+          var state = row[0].INPUT[0].$.VALUE === '1' ? 'enabled':'disabled';
+
+          console.log('  * ' + id + ' - ' + name + ' (state: ' + state + ')');
+        }
+
+        callback(null, {
+          results: list
+        });
+      });
+    }
+  );
+};
+
+/**
  * The exposed function
  **/
 module.exports = function main(host, sid, params, callback) {
 
   if(!params.length) {
-    console.log('Missing parameter.\nUsage: node index.js port-forwarding [enable|disable]');
+    console.log('Missing parameter.\nUsage: node index.js port-forwarding [enable|disable|list]');
     return;
   }
 
-  if(['enable', 'disable'].indexOf(params[0]) === -1) {
-    console.log('Wrong parameter.\nUsage: node index.js port-forwarding [enable|disable]');
+  if(['enable', 'disable', 'list'].indexOf(params[0]) === -1) {
+    console.log('Wrong parameter.\nUsage: node index.js port-forwarding [enable|disable|list]');
     return;
   }
 
