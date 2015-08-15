@@ -13,20 +13,43 @@ if(process.argv.length < 3) {
 
 var command = process.argv[2];
 
-try {
-  var mod = require('./modules/' + command);
+function _loadModule(name, callback) {
+  try {
+    var mod = require('./modules/' + name);
 
-  if(!(mod instanceof Function)) {
-    console.log('Invalid module');
-    process.exit(1);
+    if(!(mod instanceof Function)) {
+      return callback(new Error('Module ' + name + ' is not valid'));
+    }
+
+    callback(null, mod);
+  } catch(e) {
+    if(e.code === '') {
+      callback(new Error('Module not found'));
+    } else {
+      callback(e);
+    }
+  }
+}
+
+_loadModule(command, function(err, mod) {
+
+  if(err) {
+    if(err.code === 'MODULE_NOT_FOUND') {
+      console.log('Invalid command');
+    } else {
+      console.log(err.message);
+    }
+    process.exit(-1);
   }
 
   // Callback handler
   var callback = function callback(err, result) {
+
     if(err) {
       return console.log(err);
     }
 
+    // Success
     console.log('Done!');
   };
 
@@ -35,22 +58,24 @@ try {
 
     var login = require('./modules/login');
 
-    login(host, null, [process.env.FB_PASSWORD], function(err, result) {
+    login.call(null, {
+      'host': host
+    }, [process.env.FB_PASSWORD], function(err, result) {
+
       if(err) {
         return console.log('Could not login: ' + err);
       }
 
-      mod.call(null, host, result.sid, process.argv.slice(3), callback);
+      mod.call(null, {
+        'host': host,
+        'sid': result.sid
+      }, process.argv.slice(3), callback);
     });
   } else {
 
-    mod.call(null, host, '00000000000', process.argv.slice(3), callback);
+    mod.call(null, {
+      'host': host,
+      'sid': '00000000000'
+    }, process.argv.slice(3), callback);
   }
-} catch(e) {
-  if(e.code === 'MODULE_NOT_FOUND') {
-    console.log('Invalid command');
-  } else {
-    console.log(e);
-  }
-  process.exit(1);
-}
+});

@@ -119,9 +119,9 @@ internals.login = function login(host, sid, challenge, password, callback) {
 /**
  * The exposed function
  **/
-module.exports = function main(host, sid, parameters, callback) {
+module.exports = function main(options, parameters, callback) {
 
-  internals.getSessionInfo(host, function(err, result) {
+  internals.getSessionInfo(options.host, function(err, result) {
     if(err) {
       return callback(err);
     }
@@ -134,7 +134,7 @@ module.exports = function main(host, sid, parameters, callback) {
           return callback(err);
         }
 
-        internals.login(host, result.sid, result.challenge, password, callback);
+        internals.login(options.host, result.sid, result.challenge, password, callback);
       });
     } else {
       callback(null, result);

@@ -10,7 +10,7 @@ var xml2js = new require('xml2js').Parser({
 /**
  * The exposed function
  **/
-module.exports = function main(host, sid, params, callback) {
+module.exports = function main(options, params, callback) {
 
   if(!params.length) {
     console.log('Missing parameter.\nUsage: node index.js port-forwarding [enable|disable|list]');
@@ -22,8 +22,9 @@ module.exports = function main(host, sid, params, callback) {
     return;
   }
 
-  module.exports[params[0]].call(null, host, sid, callback);
+  module.exports[params[0]].call(null, options.host, options.sid, callback);
 };
+
 
 /**
  * Makes the request to Fritzbox to enable the port forwarding
