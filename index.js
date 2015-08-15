@@ -68,14 +68,18 @@ _loadModule(command, function(err, mod) {
 
       mod.call(null, {
         'host': host,
-        'sid': result.sid
+        'sid': result.sid,
+        // Print results to stdout
+        'print': true
       }, process.argv.slice(3), callback);
     });
   } else {
 
     mod.call(null, {
       'host': host,
-      'sid': '00000000000'
+      'sid': '00000000000',
+      // Print results to stdout
+      'print': true
     }, process.argv.slice(3), callback);
   }
 });

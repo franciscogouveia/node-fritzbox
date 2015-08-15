@@ -22,16 +22,16 @@ module.exports = function main(options, params, callback) {
     return;
   }
 
-  module.exports[params[0]].call(null, options.host, options.sid, callback);
+  module.exports[params[0]].call(null, options, callback);
 };
 
 
 /**
  * Makes the request to Fritzbox to enable the port forwarding
  **/
-module.exports.enable = function enableForwarding(host, sid, callback) {
+module.exports.enable = function enableForwarding(options, callback) {
   request.post(
-    'http://' + host + '/internet/port_fw.lua',
+    'http://' + options.host + '/internet/port_fw.lua',
     {
       form: {
         /* TODO This should be not hardcoded */
@@ -39,7 +39,7 @@ module.exports.enable = function enableForwarding(host, sid, callback) {
         active_2: 1,
         active_3: 1,
         box_upnp_control_activated: 1,
-        sid: sid,
+        sid: opstions.sid,
         apply: ''
       }
     },
@@ -57,15 +57,15 @@ module.exports.enable = function enableForwarding(host, sid, callback) {
 /**
  * Makes the request to Fritzbox to disable specific port forwarding settings (by not mentioning them)
  **/
-module.exports.disable = function disableForwarding(host, sid, callback) {
+module.exports.disable = function disableForwarding(options, callback) {
   request.post(
-    'http://' + host + '/internet/port_fw.lua',
+    'http://' + options.host + '/internet/port_fw.lua',
     {
       form: {
         /* TODO This should be not hardcoded */
         active_3: 1,
         box_upnp_control_activated: 1,
-        sid: sid,
+        sid: options.sid,
         apply: ''
       }
     },
@@ -83,9 +83,9 @@ module.exports.disable = function disableForwarding(host, sid, callback) {
 /**
  * Lists the current forwardings
  **/
-module.exports.list = function listForwarding(host, sid, callback) {
+module.exports.list = function listForwarding(options, callback) {
   request.get(
-    'http://' + host + '/internet/port_fw.lua?sid=' + sid,
+    'http://' + options.host + '/internet/port_fw.lua?sid=' + options.sid,
     function(error, response, body) {
 
       if(error) {
@@ -112,7 +112,9 @@ module.exports.list = function listForwarding(host, sid, callback) {
           var name = row[1].NOBR[0].SPAN[0]._;
           var state = row[0].INPUT[0].$.VALUE === '1' ? 'enabled':'disabled';
 
-          console.log('  * ' + id + ' - ' + name + ' (state: ' + state + ')');
+          if(options.print) {
+            console.log('  * ' + id + ' - ' + name + ' (state: ' + state + ')');
+          }
         }
 
         callback(null, {
