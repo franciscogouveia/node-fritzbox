@@ -4,7 +4,7 @@
   "description": "Access the Fritzbox through node",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "lab test"
   },
   "keywords": [
     "fritz",
@@ -17,5 +17,10 @@
     "dotenv": "^1.2.0",
     "request": "^2.60.0",
     "xml2js": "^0.4.10"
+  },
+  "devDependencies": {
+    "code": "^1.5.0",
+    "lab": "^5.15.1",
+    "proxyquire": "^1.6.0"
   }
 }
