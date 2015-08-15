@@ -7,12 +7,28 @@ var xml2js = new require('xml2js').Parser({
   'normalize': true
 });
 
-var internals = {};
+/**
+ * The exposed function
+ **/
+module.exports = function main(host, sid, params, callback) {
+
+  if(!params.length) {
+    console.log('Missing parameter.\nUsage: node index.js port-forwarding [enable|disable|list]');
+    return;
+  }
+
+  if(['enable', 'disable', 'list'].indexOf(params[0]) === -1) {
+    console.log('Wrong parameter.\nUsage: node index.js port-forwarding [enable|disable|list]');
+    return;
+  }
+
+  module.exports[params[0]].call(null, host, sid, callback);
+};
 
 /**
  * Makes the request to Fritzbox to enable the port forwarding
  **/
-internals.enable = function enableForwarding(host, sid, callback) {
+module.exports.enable = function enableForwarding(host, sid, callback) {
   request.post(
     'http://' + host + '/internet/port_fw.lua',
     {
@@ -40,7 +56,7 @@ internals.enable = function enableForwarding(host, sid, callback) {
 /**
  * Makes the request to Fritzbox to disable specific port forwarding settings (by not mentioning them)
  **/
-internals.disable = function disableForwarding(host, sid, callback) {
+module.exports.disable = function disableForwarding(host, sid, callback) {
   request.post(
     'http://' + host + '/internet/port_fw.lua',
     {
@@ -66,7 +82,7 @@ internals.disable = function disableForwarding(host, sid, callback) {
 /**
  * Lists the current forwardings
  **/
-internals.list = function listForwarding(host, sid, callback) {
+module.exports.list = function listForwarding(host, sid, callback) {
   request.get(
     'http://' + host + '/internet/port_fw.lua?sid=' + sid,
     function(error, response, body) {
@@ -104,22 +120,4 @@ internals.list = function listForwarding(host, sid, callback) {
       });
     }
   );
-};
-
-/**
- * The exposed function
- **/
-module.exports = function main(host, sid, params, callback) {
-
-  if(!params.length) {
-    console.log('Missing parameter.\nUsage: node index.js port-forwarding [enable|disable|list]');
-    return;
-  }
-
-  if(['enable', 'disable', 'list'].indexOf(params[0]) === -1) {
-    console.log('Wrong parameter.\nUsage: node index.js port-forwarding [enable|disable|list]');
-    return;
-  }
-
-  internals[params[0]].call(null, host, sid, callback);
 };
