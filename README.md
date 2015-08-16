@@ -1,4 +1,4 @@
-### node-fritzbox
+### node-fritzbox [![Build Status](https://travis-ci.org/franciscogouveia/node-fritzbox.svg?branch=master)](https://travis-ci.org/franciscogouveia/node-fritzbox)
 
 Setup your Fritz!Box from the command line. Or just use it as an API in your node project.
 
