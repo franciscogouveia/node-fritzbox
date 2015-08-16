@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Access the Fritzbox through node",
   "main": "index.js",
+  "repository": "git@github.com:franciscogouveia/node-fritzbox.git",
   "scripts": {
     "test": "lab -v"
   },
@@ -11,7 +12,7 @@
     "box",
     "api"
   ],
-  "author": "Francisco de Gouveia",
+  "author": "'Francisco de Gouveia' <francisco@de-gouveia.eu>",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^1.2.0",
