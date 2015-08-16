@@ -10,8 +10,8 @@ Use this software at your own risk.
 
 Setup the environment variables:
 
-* FB_HOST (optional - default: fritz.box)
-* FB_PASSWORD (optional - default: asks input)
+* `FB_HOST` (optional - default: fritz.box)
+* `FB_PASSWORD` (optional and **not recommended** - default: asks input)
 
 Alternatively, you can create a `.env` file with this environment variables.
 
