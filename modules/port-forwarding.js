@@ -192,33 +192,6 @@ module.exports.disable = function disableForwarding(options, params, callback) {
 };
 
 /**
- * Makes the request to Fritzbox to disable specific port forwarding settings (by not mentioning them)
- **/
-/*
-module.exports.disable = function disableForwarding(options, params, callback) {
-  request.post(
-    'http://' + options.host + '/internet/port_fw.lua',
-    {
-      form: {
-        active_3: 1,
-        box_upnp_control_activated: 1,
-        sid: options.sid,
-        apply: ''
-      }
-    },
-    function (error, response, body) {
-
-      if(error) {
-        return callback(error);
-      }
-
-      callback(null, body);
-    }
-  );
-};
-*/
-
-/**
  * Lists the current forwardings
  **/
 module.exports.list = function listForwarding(options, params, callback) {
