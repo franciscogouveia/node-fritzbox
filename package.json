@@ -4,7 +4,7 @@
   "description": "Access the Fritzbox through node",
   "main": "index.js",
   "scripts": {
-    "test": "lab test"
+    "test": "lab -v"
   },
   "keywords": [
     "fritz",
