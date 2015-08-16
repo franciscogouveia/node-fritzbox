@@ -50,11 +50,6 @@ internals.readHTML = function(body, callback) {
  * Enables/Disables the port-forwarding rules
  **/
 internals.set = function(options, form_params, callback) {
-
-  console.log('Setting...');
-  console.log(form_params);
-  console.log(options);
-
   request.post(
     'http://' + options.host + '/internet/port_fw.lua',
     {
