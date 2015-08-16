@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv=content-type content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<link rel="stylesheet" type="text/css" href="/css/default/main.css"/>
+<link rel="stylesheet" type="text/css" href="/css/default/sso_dropdown.css"/>
+<link rel="stylesheet" type="text/css" href="/css/default/print.css" media="print"/>
+<!--[if lte IE 8]>
+<link rel="stylesheet" type="text/css" href="/css/default/ie_fix.css"/>
+<![endif]-->
+<!--[if IE]>
+<style type="text/css">
+.hide_ftp_link {display: none;}
+</style>
+<![endif]-->
+<script type="text/javascript" src="/js/jxl.js"></script>
+<script type="text/javascript" src="/js/ready.js"></script>
+<script type="text/javascript" src="/js/help.js"></script>
+<script type="text/javascript" src="/js/popup.js?lang=de"></script>
+<script type="text/javascript" src="/js/zebra.js"></script>
+<script type="text/javascript" src="/js/ajax.js"></script>
+<script type="text/javascript" src="/js/sso_dropdown.js"></script>
+<!--[if lt IE 8]>
+<script type="text/javascript" src="/js/imgbuttonfixer.js"></script>
+<![endif]-->
+<script type="text/javascript">
+
+if (window.location.search.indexOf("&popupwnd=1")!=-1) {
+ready.onReady(popup.prepareHeader);
+}
+ready.onReady(help.show);
+ready.onReady(zebra);
+</script>
+
+<style type="text/css">
+#uiPorts {margin: auto; width: 100%;}
+#uiPorts td, #uiPorts th {padding: 1px 2px;}
+#uiPorts .c1 {text-align: center;}
+#uiPorts .c2 {text-align: left;}
+#uiPorts .c3 {text-align: center;}
+#uiPorts .c4 {text-align: center;}
+#uiPorts .c5 {text-align: left;}
+#uiPorts .c6 {text-align: center;}
+#uiUpnp {margin: auto; width:100%}
+#uiUpnp td, #uiUpnp th {padding: 1px 2px;}
+#uiUpnp .c1 {text-align: center;}
+#uiUpnp .c2 {text-align: center;}
+#uiUpnp .c3 {text-align: left;}
+#uiUpnp .c4 {text-align: center;}
+#uiUpnp .c5 {text-align: center;}
+</style>
+<script type="text/javascript" src="/js/validate.js"></script>
+<script type="text/javascript" src="/js/sort.js"></script>
+<script type="text/javascript">
+var g_delete_Btn_Msg = false;
+var sort_ports = sorter();
+var sort_upnp = sorter();
+function init() {
+jxl.disableNode( "ui_ShowUpnpControl", "1" == "0");
+jxl.display( "ui_ShowUpnpPorts", "1" == "1");
+}
+function OnChange_ChangeUpnpSecurityRules( bChecked) {
+}
+function OnChange_RuleActive(checkbox) {
+alert('Um die Portfreigabe "FTP-Server" zu aktivieren, muss der "Internetzugriff auf Ihre Speichermedien über FTP/FTPS" im Bereich "FRITZ!Box-Dienste" deaktiviert werden.');
+jxl.setChecked(checkbox, false);
+}
+function On_MainFormSubmit() {
+if ( g_delete_Btn_Msg == true) {
+if (!confirm( "Wollen Sie diesen Eintrag löschen ?")) {
+g_delete_Btn_Msg = false;
+return false;
+}
+}
+return true;
+}
+function initTableSorter() {
+sort_ports.init(uiPorts);
+sort_ports.sort_table_again(1);
+sort_upnp.init(uiUpnp);
+sort_upnp.sort_table_again(1);
+}
+g_ValPage = false;
+ready.onReady(initTableSorter);
+ready.onReady(val.init(On_MainFormSubmit, "apply", "main_form" ));
+ready.onReady(init);
+</script>
+</head>
+<body>
+<!-- pagename:/internet/port_fw.lua-->
+<div id="main_page_all">
+<div id="intro_bar_box">
+<div id="intro_bar">
+<div id="intro_bar_left" class="oemlogo_1und1">
+<img src="/css/default/images/leer.gif" usemap="#logo">
+<map name="logo">
+<area shape="rect" coords="0,0,250,77" href="/home/home.lua?sid=0000000000000000">
+</map>
+</div>
+<div id="intro_boxinfo">
+<p></p>
+</div>
+<div id="intro_bar_middle"></div>
+</div>
+</div>
+<div class="clear_float"></div>
+
+<!-- de-first -begin -->
+<div id="sub_menu_head" >
+<div class="sm_iefix">
+<span id="sso_dropdown" class="hidelist">Angemeldet
+</span>
+<div id="sso_dropdown_list" style="display:none;">
+<p>
+<a href="/sso_editmyself.lua?sid=0000000000000000&amp;own_password=&amp;back_to_page=/home/home.lua" id="ssoChangePasswordLink">Kennwort ändern
+</a>
+</p>
+<p>
+<a onclick="" href="/home/home.lua?sid=0000000000000000&amp;logout=1" id="ssoLogoutLink">Abmelden
+</a>
+</p>
+</div> | <a class="sm_link_selected sm_link_bold" href="/home/home.lua?sid=0000000000000000"><span>FRITZ!Box</span></a> | <a class="sm_link_bold" href="/nas?sid=0000000000000000">FRITZ!NAS</a> | <a class="sm_link_bold" href="/myfritz?sid=0000000000000000">MyFRITZ!</a> | <a target="_blank" href="/help/help.lua?sid=0000000000000000&helppage=hilfe_portfreigabe" onclick="help.popup('/help/help.lua?sid=0000000000000000&helppage=hilfe_portfreigabe&hide=yes'); return false;" title="Hilfe" class="nocancel iconHelp"><img alt="" src="/css/default/images/icon_hilfe.png"></a></div>
+</div>
+
+<div id="menu_content_box">
+
+<div id="menuBox">
+<div id="menucontent" class="menu_body_outer">
+<ul>
+<li><a href="/home/home.lua?sid=0000000000000000">Übersicht</a></li>
+<li class=" selected submenu"><a href="/internet/inetstat_monitor.lua?sid=0000000000000000">Internet</a>
+<ul>
+<li><a href="/internet/inetstat_monitor.lua?sid=0000000000000000">Online-Monitor</a></li>
+<li><a href="/internet/internet_settings.lua?sid=0000000000000000">Zugangsdaten</a></li>
+<li><a href="/internet/kids_userlist.lua?sid=0000000000000000">Filter</a></li>
+<li class=" selected"><a href="/internet/port_fw.lua?sid=0000000000000000">Freigaben</a></li>
+<li><a href="/internet/myfritz.lua?sid=0000000000000000">MyFRITZ!</a></li>
+<li><a href="/internet/dsl_overview.lua?sid=0000000000000000">DSL-Informationen</a></li>
+</ul></li>
+<li><a href="/fon_num/foncalls_list.lua?sid=0000000000000000">Telefonie</a></li>
+<li><a href="/net/network_user_devices.lua?sid=0000000000000000">Heimnetz</a></li>
+<li><a href="/wlan/wlan_settings.lua?sid=0000000000000000">WLAN</a></li>
+<li><a href="/dect/dect_list.lua?sid=0000000000000000">DECT</a></li>
+<li><a href="/system/diagnosis.lua?sid=0000000000000000">Diagnose</a></li>
+<li><a href="/system/syslog.lua?sid=0000000000000000">System</a></li>
+</ul></div>
+</div>
+
+<div id="page_content_menu_box">
+<div id="contentTitle" class="blue_bar_back">
+<h2 id="uiPageTitle">Freigaben</h2>
+</div>
+<div id="page_content" class="page_content">
+<ul class="tabs">
+<li class="active"><a href="/internet/port_fw.lua?sid=0000000000000000&">Portfreigaben</a></li>
+<li><a href="/internet/usbdisk_freigabe.lua?sid=0000000000000000&">Speicher</a></li>
+<li><a href="/internet/remote_https.lua?sid=0000000000000000&">FRITZ!Box-Dienste</a></li>
+<li><a href="/internet/dyn_dns.lua?sid=0000000000000000&">Dynamic DNS</a></li>
+<li><a href="/internet/vpn.lua?sid=0000000000000000&">VPN</a></li>
+</ul><div class='clear_float'></div>
+
+<div id="uiValidationWait" style="display:none;">
+<div class="wait">
+<p>
+Bitte warten Sie, Ihre Eingaben werden geprüft.
+</p>
+<p class="waitimg">
+<img src="/css/default/images/wait.gif">
+</p>
+</div>
+<div class="btn_form_foot">
+</div>
+</div>
+<div id="uiValidationDone" style="display:none;">
+<div class="wait">
+<p>
+Die Prüfung der Eingaben war erfolgreich.
+</p>
+<p class="waitimg">
+<img src="/css/default/images/finished_ok_green.gif">
+</p>
+</div>
+<div class="btn_form_foot">
+<button type="button" id="uiValidationDoneOk">
+OK
+</button>
+</div>
+</div>
+
+<form method="POST" action="/internet/port_fw.lua" id="uiMainForm" name="main_form">
+<p>
+An FRITZ!Box angeschlossene Computer sind sicher vor unerwünschten Zugriffen aus dem Internet. Für einige Anwendungen wie z.B. Online-Spiele oder das Filesharing-Programm eMule muss Ihr Computer jedoch für andere Teilnehmer des Internets erreichbar sein. Durch Portfreigaben erlauben Sie solche Verbindungen.
+</p>
+<h4>Liste der Portfreigaben</h4>
+<table id="uiPorts" class="zebra">
+<tr class="thead">
+<th class="c1">Aktiv</th>
+<th class="c2 sortable">Bezeichnung<span class="sort_no">&nbsp;</span></th>
+<th class="c3 sortable">Protokoll<span class="sort_no">&nbsp;</span></th>
+<th class="c4 sortable">Port<span class="sort_no">&nbsp;</span></th>
+<th class="c5 sortable">an Computer<span class="sort_no">&nbsp;</span></th>
+<th class="c6 sortable">an Port<span class="sort_no">&nbsp;</span></th>
+<th class="buttonrow">&nbsp;</th>
+<th class="buttonrow">&nbsp;</th>
+</tr>
+<tr><td class="c1"><input type="checkbox" name="active_1" value="1" id="ui_Active_1"    ></td><td class="c2"><nobr><span title="HTTP-Server" >HTTP-Server</span></nobr></td><td class="c3"><nobr><span title="TCP" >TCP</span></nobr></td><td class="c4"><nobr><span title="80" >80</span></nobr></td><td class="c5"><nobr><span title="blackbox" >blackbox</span></nobr></td><td class="c6"><nobr><span title="80" >80</span></nobr></td><td class="buttonrow"><button type="submit" class="icon" id="edit_rule0" name="edit" value="rule0" title="Bearbeiten"><img src="/css/default/images/bearbeiten.gif" alt="Bearbeiten"/></button></td><td class="buttonrow"><button type="submit" class="icon" id="delete_rule0" name="delete_portrule" value="rule0" title="Löschen" onclick="return g_delete_Btn_Msg=true;"><img src="/css/default/images/loeschen.gif" alt="Löschen"/></button></td></tr><tr><td class="c1"><input type="checkbox" name="active_2" value="1" id="ui_Active_2"    ></td><td class="c2"><nobr><span title="HTTPS-Server" >HTTPS-Server</span></nobr></td><td class="c3"><nobr><span title="TCP" >TCP</span></nobr></td><td class="c4"><nobr><span title="443" >443</span></nobr></td><td class="c5"><nobr><span title="blackbox" >blackbox</span></nobr></td><td class="c6"><nobr><span title="443" >443</span></nobr></td><td class="buttonrow"><button type="submit" class="icon" id="edit_rule1" name="edit" value="rule1" title="Bearbeiten"><img src="/css/default/images/bearbeiten.gif" alt="Bearbeiten"/></button></td><td class="buttonrow"><button type="submit" class="icon" id="delete_rule1" name="delete_portrule" value="rule1" title="Löschen" onclick="return g_delete_Btn_Msg=true;"><img src="/css/default/images/loeschen.gif" alt="Löschen"/></button></td></tr><tr><td class="c1"><input type="checkbox" name="active_3" value="1" id="ui_Active_3"    checked="checked"  ></td><td class="c2"><nobr><span title="SSH" >SSH</span></nobr></td><td class="c3"><nobr><span title="TCP" >TCP</span></nobr></td><td class="c4"><nobr><span title="101" >101</span></nobr></td><td class="c5"><nobr><span title="blackbox" >blackbox</span></nobr></td><td class="c6"><nobr><span title="22" >22</span></nobr></td><td class="buttonrow"><button type="submit" class="icon" id="edit_rule2" name="edit" value="rule2" title="Bearbeiten"><img src="/css/default/images/bearbeiten.gif" alt="Bearbeiten"/></button></td><td class="buttonrow"><button type="submit" class="icon" id="delete_rule2" name="delete_portrule" value="rule2" title="Löschen" onclick="return g_delete_Btn_Msg=true;"><img src="/css/default/images/loeschen.gif" alt="Löschen"/></button></td></tr>
+</table>
+<p class="innerbutton">
+<button type="submit" name="new_rule">Neue  Portfreigabe</button>
+</p>
+<p class="WarnMsgBold" style="display: none;">
+Achtung: Die Firewall Ihrer FRITZ!Box ist deaktiviert.<br>
+Der als "Exposed Host" angegebene Computer ist ungeschützt im Internet sichtbar und erreichbar. Ausgenommen sind Portfreigaben zu anderen Computern in der Liste der Portfreigaben, welche nur an diese weiter geleitet werden.
+</p>
+<hr>
+<div id="ui_ShowUpnpControl"><div><input type="checkbox" name="box_upnp_control_activated" value="1" id="uiView_box_upnp_control_activated"  onclick="OnChange_ChangeUpnpSecurityRules(this.checked)"  checked="checked"  >&nbsp;<label for="uiView_box_upnp_control_activated" id="LabeluiView_box_upnp_control_activated" >Änderungen der Sicherheitseinstellungen über UPnP gestatten</label><p class="formular">Geräte wie Smart-TV oder Smartphone bzw. Anwendungen mit UPnP-Unterstützung können im Heimnetz Sicherheitseinstellungen wie die Portfreigaberegeln der FRITZ!Box automatisch verändern. Aktivieren Sie diese Option aus Sicherheitsgründen nur, wenn Sie tatsächlich eingehende Verbindungen aus dem Internet gestatten möchten.</p></div></div>
+<div id="ui_ShowUpnpPorts">
+<p>Die aktuelle Konfiguration Ihrer FRITZ!Box gestattet die Änderung der Sicherheitseinstellungen über UPnP. Anwendungen mit UPnP-Unterstützung können somit automatisch weitere Ports öffnen.</p>
+<h4>Liste der UPnP geöffneten Ports</h4>
+<table id="uiUpnp" class="zebra"></table>
+</div>
+
+<div id="btn_form_foot">
+<input type="hidden" name="sid" value="0000000000000000">
+<button type="submit" name="apply" id="uiApply">Übernehmen</button>
+<button type="submit" name="cancel">Abbrechen</button>
+<button type="submit" name="update">Aktualisieren</button>
+</div>
+</form>
+<!-- de-first -begin -->
+
+<p id="page_needs_js_txt" style="display:none;">
+Die Funktionen dieser Seite benötigen Javascript. Bitte aktivieren Sie Javascript in Ihrem Browser und laden Sie die Seite erneut.
+</p>
+<span id="uiLuatime"></span>
+</div>
+<div class="clear_float"></div>
+</div>
+</div>
+
+<!-- de-first -begin -->
+<div id="foot_menu_box">
+<a href="/system/expert.lua?sid=0000000000000000&amp;backtopage=%2Finternet%2Fport_fw.lua" title="Sie befinden sich in der Erweiterten Ansicht. Beim Wechsel in die Standardansicht werden einige Bereiche der FRITZ!Box-Oberfläche ausgeblendet und es werden nur noch die Einstellungen angezeigt, die für den alltäglichen Betrieb der FRITZ!Box erforderlich sind.">Ansicht: Erweitert</a> | <a href="/menus/sitemap.lua?sid=0000000000000000" title="Inhalt" >Inhalt</a> | <a class="nocancel" href='http://www.avm.de/fritzbox_manual.php?hardware=203&oem=1und1&language=de&country=&version=131.06.20&subversion=' target='_blank'>Handbuch</a> | <a class="nocancel" href='http://www.avm.de/fritzbox-service-portal.php?hardware=203&oem=1und1&language=de&country=&version=131.06.20&subversion=' target='_blank'>Tipps&amp;Tricks</a> | <a class="nocancel" href='http://www.avm.de/newsletter?hardware=203&oem=1und1&language=de&country=&version=131.06.20&subversion=' target='_blank'>Newsletter</a> | <a class="nocancel" href='http://www.avm.de' target='_blank' style='margin-right:0px;'>avm.de</a>
+</div>
+
+</div>
+
+
+
+<div id="logqueries" style="clear:both; display:none;">
+<pre>
+script = /internet/port_fw.lua
+GET = {
+}
+POST = {
+}
+QUERIES = {
+  ["box:settings/ata_mode"] = "0",
+  ["box:settings/expertmode/activated"] = "1",
+  ["box:settings/hostname"] = "",
+  ["box:settings/opmode"] = "opmode_pppoe",
+  ["box:settings/upnp/activated"] = "1",
+  ["box:settings/upnp/control_activated"] = "1",
+  ["box:settings/usbtethering_mode"] = "0",
+  ["box:status/localtime"] = "18:44:38 15.08.2015",
+  ["boxusers:settings/compatibility_mode"] = "1",
+  ["boxusers:settings/last_homenetwork_username"] = "",
+  ["boxusers:settings/own_email"] = "nil",
+  ["boxusers:settings/own_password"] = "****",
+  ["boxusers:settings/skip_auth_from_homenetwork"] = "0",
+  ["connection0:settings/type"] = "pppoe",
+  ["ctlusb:settings/internalflash_enabled"] = "1",
+  ["ctlusb:settings/storage-ftp-internet"] = "0",
+  ["ctlusb:settings/storage-part/count"] = "0",
+  ["ctlusb:settings/tethering_device"] = "nil",
+  ["ddns:settings/account0/activated"] = "1",
+  ["dect:settings/enabled"] = "1",
+  ["forwardrules:settings/exposed_host"] = "",
+  ["forwardrules:settings/use_exposed_host"] = "0",
+  ["gsm:settings/ModemPresent"] = "0",
+  ["gsm:settings/PinEmpty"] = "1",
+  ["ipv6:settings/ipv6_fw_hidden"] = "1",
+  ["jasonii:settings/user_email"] = "",
+  ["rights:status/BoxAdmin"] = "2",
+  ["rights:status/boxuser_UID"] = "boxuser100",
+  ["rights:status/userid"] = "100",
+  ["rights:status/username"] = "@CompatMode",
+  ["security:settings/password"] = "****",
+  ["umts:settings/enabled"] = "0",
+  ["wlan:settings/WDS_enabled"] = "0"
+}
+MQUERIES = {
+  ["forwardrules:settings/rule/list(activated,description,protocol,port,fwip,fwport,endport)"] = {
+    [1] = {
+      ["_node"] = "rule0",
+      ["activated"] = "0",
+      ["description"] = "HTTP-Server",
+      ["endport"] = "80",
+      ["fwip"] = "192.168.1.2",
+      ["fwport"] = "80",
+      ["port"] = "80",
+      ["protocol"] = "TCP"
+    },
+    [2] = {
+      ["_node"] = "rule1",
+      ["activated"] = "0",
+      ["description"] = "HTTPS-Server",
+      ["endport"] = "443",
+      ["fwip"] = "192.168.1.2",
+      ["fwport"] = "443",
+      ["port"] = "443",
+      ["protocol"] = "TCP"
+    },
+    [3] = {
+      ["_node"] = "rule2",
+      ["activated"] = "1",
+      ["description"] = "SSH",
+      ["endport"] = "101",
+      ["fwip"] = "192.168.1.2",
+      ["fwport"] = "22",
+      ["port"] = "101",
+      ["protocol"] = "TCP"
+    }
+  },
+  ["igdforwardrules:settings/rule/list(protocol,port,fwname,fwip,fwport)"] = {
+    [1] = {
+      ["_node"] = "rule0",
+      ["fwip"] = "192.168.1.25",
+      ["fwname"] = "Blackmin",
+      ["fwport"] = "53684",
+      ["port"] = "53684",
+      ["protocol"] = "UDP"
+    },
+    [2] = {
+      ["_node"] = "rule1",
+      ["fwip"] = "192.168.1.25",
+      ["fwname"] = "Blackmin",
+      ["fwport"] = "57872",
+      ["port"] = "57872",
+      ["protocol"] = "UDP"
+    },
+    [3] = {
+      ["_node"] = "rule2",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "57373",
+      ["port"] = "57373",
+      ["protocol"] = "UDP"
+    },
+    [4] = {
+      ["_node"] = "rule3",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "52279",
+      ["port"] = "52279",
+      ["protocol"] = "UDP"
+    },
+    [5] = {
+      ["_node"] = "rule4",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "54350",
+      ["port"] = "54350",
+      ["protocol"] = "UDP"
+    },
+    [6] = {
+      ["_node"] = "rule5",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "53290",
+      ["port"] = "53290",
+      ["protocol"] = "UDP"
+    },
+    [7] = {
+      ["_node"] = "rule6",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "52046",
+      ["port"] = "52046",
+      ["protocol"] = "UDP"
+    },
+    [8] = {
+      ["_node"] = "rule7",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "63667",
+      ["port"] = "63667",
+      ["protocol"] = "UDP"
+    },
+    [9] = {
+      ["_node"] = "rule8",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "51072",
+      ["port"] = "51072",
+      ["protocol"] = "UDP"
+    },
+    [10] = {
+      ["_node"] = "rule9",
+      ["fwip"] = "192.168.1.20",
+      ["fwname"] = "Lenovo-Yoga2-Pro-SlimFit",
+      ["fwport"] = "22016",
+      ["port"] = "22016",
+      ["protocol"] = "UDP"
+    },
+    [11] = {
+      ["_node"] = "rule10",
+      ["fwip"] = "192.168.1.20",
+      ["fwname"] = "Lenovo-Yoga2-Pro-SlimFit",
+      ["fwport"] = "22016",
+      ["port"] = "22016",
+      ["protocol"] = "TCP"
+    },
+    [12] = {
+      ["_node"] = "rule11",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "58578",
+      ["port"] = "58578",
+      ["protocol"] = "UDP"
+    },
+    [13] = {
+      ["_node"] = "rule12",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "62162",
+      ["port"] = "62162",
+      ["protocol"] = "UDP"
+    },
+    [14] = {
+      ["_node"] = "rule13",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "60284",
+      ["port"] = "60284",
+      ["protocol"] = "UDP"
+    },
+    [15] = {
+      ["_node"] = "rule14",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "64268",
+      ["port"] = "64268",
+      ["protocol"] = "UDP"
+    },
+    [16] = {
+      ["_node"] = "rule15",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "64075",
+      ["port"] = "64075",
+      ["protocol"] = "UDP"
+    },
+    [17] = {
+      ["_node"] = "rule16",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "54106",
+      ["port"] = "54106",
+      ["protocol"] = "UDP"
+    },
+    [18] = {
+      ["_node"] = "rule17",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "59649",
+      ["port"] = "59649",
+      ["protocol"] = "UDP"
+    },
+    [19] = {
+      ["_node"] = "rule18",
+      ["fwip"] = "192.168.1.3",
+      ["fwname"] = "android-5565c8a542f65a0f",
+      ["fwport"] = "57334",
+      ["port"] = "57334",
+      ["protocol"] = "UDP"
+    },
+    [20] = {
+      ["_node"] = "rule19",
+      ["fwip"] = "192.168.1.6",
+      ["fwname"] = "Blackmin",
+      ["fwport"] = "59356",
+      ["port"] = "59356",
+      ["protocol"] = "UDP"
+    },
+    [21] = {
+      ["_node"] = "rule20",
+      ["fwip"] = "192.168.1.6",
+      ["fwname"] = "Blackmin",
+      ["fwport"] = "60023",
+      ["port"] = "60023",
+      ["protocol"] = "UDP"
+    },
+    [22] = {
+      ["_node"] = "rule21",
+      ["fwip"] = "192.168.1.6",
+      ["fwname"] = "Blackmin",
+      ["fwport"] = "60396",
+      ["port"] = "60396",
+      ["protocol"] = "UDP"
+    },
+    [23] = {
+      ["_node"] = "rule22",
+      ["fwip"] = "192.168.1.6",
+      ["fwname"] = "Blackmin",
+      ["fwport"] = "63546",
+      ["port"] = "63546",
+      ["protocol"] = "UDP"
+    },
+    [24] = {
+      ["_node"] = "rule23",
+      ["fwip"] = "192.168.1.31",
+      ["fwname"] = "ASUS-N55s-Battlecruiser",
+      ["fwport"] = "37985",
+      ["port"] = "37985",
+      ["protocol"] = "UDP"
+    },
+    [25] = {
+      ["_node"] = "rule24",
+      ["fwip"] = "192.168.1.31",
+      ["fwname"] = "ASUS-N55s-Battlecruiser",
+      ["fwport"] = "37985",
+      ["port"] = "37985",
+      ["protocol"] = "TCP"
+    },
+    [26] = {
+      ["_node"] = "rule25",
+      ["fwip"] = "192.168.1.4",
+      ["fwname"] = "PC-192-168-1-4",
+      ["fwport"] = "13596",
+      ["port"] = "13596",
+      ["protocol"] = "UDP"
+    },
+    [27] = {
+      ["_node"] = "rule26",
+      ["fwip"] = "192.168.1.4",
+      ["fwname"] = "PC-192-168-1-4",
+      ["fwport"] = "13596",
+      ["port"] = "13596",
+      ["protocol"] = "TCP"
+    },
+    [28] = {
+      ["_node"] = "rule27",
+      ["fwip"] = "192.168.1.30",
+      ["fwname"] = "Battlecruiser",
+      ["fwport"] = "40043",
+      ["port"] = "40043",
+      ["protocol"] = "UDP"
+    },
+    [29] = {
+      ["_node"] = "rule28",
+      ["fwip"] = "192.168.1.30",
+      ["fwname"] = "Battlecruiser",
+      ["fwport"] = "40043",
+      ["port"] = "40043",
+      ["protocol"] = "TCP"
+    },
+    [30] = {
+      ["_node"] = "rule29",
+      ["fwip"] = "192.168.1.21",
+      ["fwname"] = "Nexus-4",
+      ["fwport"] = "51069",
+      ["port"] = "51069",
+      ["protocol"] = "UDP"
+    },
+    [31] = {
+      ["_node"] = "rule30",
+      ["fwip"] = "192.168.1.21",
+      ["fwname"] = "Nexus-4",
+      ["fwport"] = "51069",
+      ["port"] = "51069",
+      ["protocol"] = "TCP"
+    },
+    [32] = {
+      ["_node"] = "rule31",
+      ["fwip"] = "192.168.1.6",
+      ["fwname"] = "Blackmin",
+      ["fwport"] = "61550",
+      ["port"] = "61550",
+      ["protocol"] = "UDP"
+    },
+    [33] = {
+      ["_node"] = "rule32",
+      ["fwip"] = "192.168.1.21",
+      ["fwname"] = "Nexus-4",
+      ["fwport"] = "56078",
+      ["port"] = "56078",
+      ["protocol"] = "UDP"
+    },
+    [34] = {
+      ["_node"] = "rule33",
+      ["fwip"] = "192.168.1.21",
+      ["fwname"] = "Nexus-4",
+      ["fwport"] = "56078",
+      ["port"] = "56078",
+      ["protocol"] = "TCP"
+    }
+  },
+  ["landevice:settings/landevice/list(name,ip)"] = {
+    [1] = {
+      ["_node"] = "landevice0",
+      ["ip"] = "192.168.1.31",
+      ["name"] = "ASUS-N55s-Battlecruiser"
+    },
+    [2] = {
+      ["_node"] = "landevice1",
+      ["ip"] = "192.168.1.33",
+      ["name"] = "Amilo"
+    },
+    [3] = {
+      ["_node"] = "landevice2",
+      ["ip"] = "192.168.1.30",
+      ["name"] = "Battlecruiser"
+    },
+    [4] = {
+      ["_node"] = "landevice3",
+      ["ip"] = "192.168.1.4",
+      ["name"] = "Blackmin"
+    },
+    [5] = {
+      ["_node"] = "landevice4",
+      ["ip"] = "192.168.1.6",
+      ["name"] = "Blackmin"
+    },
+    [6] = {
+      ["_node"] = "landevice5",
+      ["ip"] = "192.168.1.32",
+      ["name"] = "EHYZAKs-iPhone"
+    },
+    [7] = {
+      ["_node"] = "landevice6",
+      ["ip"] = "192.168.1.5",
+      ["name"] = "Finanz"
+    },
+    [8] = {
+      ["_node"] = "landevice7",
+      ["ip"] = "192.168.1.10",
+      ["name"] = "Finanz-W7"
+    },
+    [9] = {
+      ["_node"] = "landevice8",
+      ["ip"] = "192.168.1.9",
+      ["name"] = "Generic-W7"
+    },
+    [10] = {
+      ["_node"] = "landevice9",
+      ["ip"] = "192.168.1.27",
+      ["name"] = "HALL900045943"
+    },
+    [11] = {
+      ["_node"] = "landevice10",
+      ["ip"] = "192.168.1.6",
+      ["name"] = "Jukebox"
+    },
+    [12] = {
+      ["_node"] = "landevice11",
+      ["ip"] = "192.168.1.4",
+      ["name"] = "Knot"
+    },
+    [13] = {
+      ["_node"] = "landevice12",
+      ["ip"] = "192.168.1.20",
+      ["name"] = "Lenovo-Yoga2-Pro-SlimFit"
+    },
+    [14] = {
+      ["_node"] = "landevice13",
+      ["ip"] = "192.168.1.29",
+      ["name"] = "LiveSense-Ubuntu"
+    },
+    [15] = {
+      ["_node"] = "landevice14",
+      ["ip"] = "192.168.1.21",
+      ["name"] = "Nexus-4"
+    },
+    [16] = {
+      ["_node"] = "landevice15",
+      ["ip"] = "192.168.1.250",
+      ["name"] = "PC-192-168-1-250"
+    },
+    [17] = {
+      ["_node"] = "landevice16",
+      ["ip"] = "192.168.1.4",
+      ["name"] = "PC-192-168-1-4"
+    },
+    [18] = {
+      ["_node"] = "landevice17",
+      ["ip"] = "192.168.1.8",
+      ["name"] = "PC-192-168-1-8"
+    },
+    [19] = {
+      ["_node"] = "landevice18",
+      ["ip"] = "",
+      ["name"] = "PC-C2-D9-62-17-34-4A"
+    },
+    [20] = {
+      ["_node"] = "landevice19",
+      ["ip"] = "192.168.1.24",
+      ["name"] = "Playstation3"
+    },
+    [21] = {
+      ["_node"] = "landevice20",
+      ["ip"] = "192.168.1.22",
+      ["name"] = "Samsung-Galaxy-Note"
+    },
+    [22] = {
+      ["_node"] = "landevice21",
+      ["ip"] = "192.168.1.23",
+      ["name"] = "SonosZP"
+    },
+    [23] = {
+      ["_node"] = "landevice22",
+      ["ip"] = "192.168.1.34",
+      ["name"] = "android-138348409d81d102"
+    },
+    [24] = {
+      ["_node"] = "landevice23",
+      ["ip"] = "192.168.1.7",
+      ["name"] = "android-40ef4064c2422621"
+    },
+    [25] = {
+      ["_node"] = "landevice24",
+      ["ip"] = "192.168.1.3",
+      ["name"] = "android-5565c8a542f65a0f"
+    },
+    [26] = {
+      ["_node"] = "landevice25",
+      ["ip"] = "192.168.1.2",
+      ["name"] = "blackbox"
+    },
+    [27] = {
+      ["_node"] = "landevice26",
+      ["ip"] = "192.168.1.28",
+      ["name"] = "windows7"
+    }
+  }
+}
+CONFIG = {
+  ["AB_COUNT"] = 1,
+  ["ATA"] = true,
+  ["AURA"] = true,
+  ["BETA_RELEASE"] = 0,
+  ["BOX_FEEDBACK"] = true,
+  ["CAPI_POTS"] = false,
+  ["CAPI_TE"] = false,
+  ["DECT"] = true,
+  ["DECT_MONI"] = true,
+  ["DECT_MONI_EX"] = true,
+  ["DOCSIS"] = false,
+  ["DSL"] = true,
+  ["ECO"] = true,
+  ["ECO_SYSSTAT"] = true,
+  ["FAXSEND"] = true,
+  ["FON"] = true,
+  ["FONQUALITY"] = true,
+  ["GUI_6360_WLAN_INCOMPLETE"] = false,
+  ["GUI_AUTOUPDATETAB"] = true,
+  ["GUI_HAS_11AC"] = false,
+  ["GUI_IS_POWERLINE"] = false,
+  ["GUI_IS_REPEATER"] = false,
+  ["GUI_LAN_GUEST"] = true,
+  ["GUI_NEW_FAX"] = true,
+  ["GUI_REMOTE_TMP"] = false,
+  ["GUI_SIP_READ_ONLY"] = true,
+  ["IPV6"] = true,
+  ["KIDS"] = true,
+  ["LABOR_DSL"] = false,
+  ["LTE"] = false,
+  ["MAILER"] = false,
+  ["MAILER2"] = true,
+  ["MANUAL_URL"] = "http://www.avm.de/fritzbox_manual.php?hardware=203&amp;oem=1und1&amp;language=de&amp;country=&amp;version=131.06.20&amp;subversion=",
+  ["MEDIASRV"] = true,
+  ["MORPHSTICK"] = false,
+  ["MTD_MAIL"] = true,
+  ["MTD_RSS"] = true,
+  ["MULTI_COUNTRY"] = false,
+  ["MULTI_LANGUAGE"] = false,
+  ["MYFRITZ"] = true,
+  ["NAND"] = true,
+  ["NAS"] = true,
+  ["NEWSLETTER_URL"] = "http://www.avm.de/newsletter?hardware=203&amp;oem=1und1&amp;language=de&amp;country=&amp;version=131.06.20&amp;subversion=",
+  ["NLR_AUDIO"] = false,
+  ["NQOS"] = true,
+  ["RAMDISK"] = false,
+  ["RELEASE"] = 1,
+  ["REMOTE_HTTPS"] = true,
+  ["SERVICEPORTAL_URL"] = "http://www.avm.de/fritzbox-service-portal.php?hardware=203&amp;oem=1und1&amp;language=de&amp;country=&amp;version=131.06.20&amp;subversion=",
+  ["SESSIONID"] = true,
+  ["STOREUSRCFG"] = true,
+  ["TAM_MODE"] = 1,
+  ["TIMERCONTROL"] = true,
+  ["TR069"] = true,
+  ["USB_GSM"] = true,
+  ["USB_HOST"] = true,
+  ["USB_STORAGE"] = true,
+  ["USB_STORAGE_SPINDOWN"] = true,
+  ["USB_XHCI"] = false,
+  ["VPN"] = true,
+  ["WEBCM_INTERPRETER"] = true,
+  ["WLAN"] = {
+  },
+  ["WLAN_GUEST"] = true,
+  ["WLAN_WDS"] = false,
+  ["WLAN_WDS2"] = true,
+  ["WLAN_WPS"] = true,
+  ["country"] = "049",
+  ["gu_type"] = "release",
+  ["isDebug"] = false,
+  ["is_6360"] = false,
+  ["isp_mac_needed"] = false,
+  ["language"] = "de",
+  ["language_is_de"] = true,
+  ["need_reboot"] = false,
+  ["no_ir_pc_rss_samples"] = false,
+  ["no_number_area"] = false,
+  ["oem"] = "1und1",
+  ["sip_packetsize"] = false,
+  ["sip_provider_international"] = false,
+  ["timezone"] = false,
+  ["use_nat"] = false
+}
+</pre>
+</div>
+</body>
+</html>
+
