@@ -108,6 +108,7 @@ internals.readForm = function(body, callback) {
 
     var divs = data.FORM.INPUT[0].HR[0].DIV;
 
+    var plc_desc = divs[0].INPUT[0].$.VALUE;
     var dev_name = divs[1].INPUT[0].$.VALUE;
     var static_dhcp = (divs[4].INPUT[0].$.CHECKED === 'checked')?'on':'';
 
@@ -124,6 +125,7 @@ internals.readForm = function(body, callback) {
 
     callback(null, {
       result: {
+        plc_desc: plc_desc,
         dev_name: dev_name,
         static_dhcp: static_dhcp,
         kisi_profile: kisi_profile,
@@ -169,6 +171,23 @@ internals.get = function(options, device_id, callback) {
   );
 };
 
+internals.wake = function(options, form_params, callback) {
+
+  request.post(
+    'http://' + options.host + '/net/edit_device.lua?dev=' + form_params.dev + '&sid=' + options.sid,
+    {
+      form: form_params
+    },
+    function(error, response, body) {
+      if(error) {
+        return callback(error);
+      }
+
+      callback(null, body);
+    }
+  );
+};
+
 internals.print = {};
 
 internals.print.list = function list(data) {
@@ -185,16 +204,6 @@ internals.print.list = function list(data) {
   }
 };
 
-/*
-dev_name:blackbox
-static_dhcp:on
-kisi_profile:filtprof1
-auto_wakeup:on
-btn_wake:
-back_to_page:/net/network_user_devices.lua
-dev:landevice3814
-last_action:
-*/
 internals.print.info = function list(data) {
 
   console.log('  Device: ' + data.result.dev_name);
@@ -209,12 +218,12 @@ internals.print.info = function list(data) {
 module.exports = function main(options, params, callback) {
 
   if(!params.length) {
-    console.log('Missing parameter.\nUsage: node index.js devices [list|info <device_id>]');
+    console.log('Missing parameter.\nUsage: node index.js devices [list|info <device_id>]|wake <device_id>');
     return;
   }
 
-  if(['list', 'info'].indexOf(params[0]) === -1) {
-    console.log('Wrong parameter.\nUsage: node index.js devices [list|info <device_id>]');
+  if(['list', 'info', 'wake'].indexOf(params[0]) === -1) {
+    console.log('Wrong parameter.\nUsage: node index.js devices [list|info <device_id>|wake <device_id>]');
     return;
   }
 
@@ -224,7 +233,7 @@ module.exports = function main(options, params, callback) {
       return callback(err);
     }
 
-    if(options.print) {
+    if(options.print && internals.print[params[0]]) {
       internals.print[params[0]](data);
     }
 
@@ -264,5 +273,25 @@ module.exports.info = function info(options, params, callback) {
     }
 
     internals.readForm(body, callback);
+  });
+};
+
+/**
+ * Wakes the device (requires that the device has WOL configured)
+ **/
+module.exports.wake = function wake(options, params, callback) {
+
+  module.exports.info(options, params, function(error, data) {
+
+    if(error) {
+      return callback(error);
+    }
+
+    var form_params = data.result;
+    form_params.dev = params[0];
+    form_params.btn_wake = '';
+    form_params.last_action = '';
+
+    internals.wake(options, form_params, callback);
   });
 };
