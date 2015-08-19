@@ -72,7 +72,7 @@ node index port-forwarding disable active_1 active_2 ...
 
 #### Tested devices
 
-* Fritz!Box 7362 SL (Fritz!OS 06.20)
+* Fritz!Box 7362 SL (Fritz!OS 06.30)
 
 #### LICENCE
 
