@@ -25,21 +25,46 @@ And you should be good to go.
 
 #### Usage
 
-At the moment it is only possible to read/set existent port-forwarding rules.
+At the moment it is possible to:
 
-##### Listing rules
+* List devices (connected and disconnected)
+* Get device info
+* Send WOL packet to device
+* List port-forwarding rules
+* Enable / disable port-forwarding rules
+
+
+##### List devices
+
+```
+node index devices list
+```
+
+##### Get device info
+
+```
+node index devices info device_id
+```
+
+##### Wake device
+
+```
+node index devices wake device_id
+```
+
+##### List port-forwarding rules
 
 ```
 node index port-forwarding list
 ```
 
-##### Enable rules
+##### Enable port-forwarding rules
 
 ```
 node index port-forwarding enable active_1 active_2 ...
 ```
 
-##### Disable rules
+##### Disable port-forwarding rules
 
 ```
 node index port-forwarding disable active_1 active_2 ...
