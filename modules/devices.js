@@ -66,7 +66,7 @@ internals.readDeviceTable = function(body, table_id, connected, callback) {
 /**
  * Parses the network_user_devices.lua page to obtain the port-forwarding rules
  **/
-internals.readHTML = function(body, callback) {
+internals.readTables = function(body, callback) {
 
   internals.readDeviceTable(body, 'uiLanActive', true, function(error, active) {
 
@@ -93,9 +93,51 @@ internals.readHTML = function(body, callback) {
 };
 
 /**
+ * Read device information
+ **/
+internals.readForm = function(body, callback) {
+  // Find <form> element with the information we want and strip it out
+  var form = body.substr(body.indexOf('<form name="main_form"'));
+  form = form.substr(0, form.indexOf('</form>') + '</form>'.length);
+
+  xml2js.parseString(form, function(err, data) {
+
+    if(err) {
+      return callback(err);
+    }
+
+    var divs = data.FORM.INPUT[0].HR[0].DIV;
+
+    var dev_name = divs[1].INPUT[0].$.VALUE;
+    var static_dhcp = (divs[4].INPUT[0].$.CHECKED === 'checked')?'on':'';
+
+    var kisi_profile;
+    var kisi_profile_select = divs[21].HR[0].DIV[3].TABLE[0].TR[1].TD[2].SELECT[0].OPTION;
+    for(var i = 0; i < kisi_profile_select.length; i++) {
+      if(kisi_profile_select[i].$.SELECTED === 'selected') {
+        kisi_profile = kisi_profile_select[i].$.VALUE;
+      }
+    }
+
+    var auto_wakeup = (divs[22].HR[0].DIV[0].INPUT[0].$.CHECKED === 'checked')?'on':'';
+    var btn_wake = '';
+
+    callback(null, {
+      result: {
+        dev_name: dev_name,
+        static_dhcp: static_dhcp,
+        kisi_profile: kisi_profile,
+        auto_wakeup: auto_wakeup,
+        btn_wake: btn_wake
+      }
+    });
+  });
+};
+
+/**
  * Obtains the currently configured devices
  **/
-internals.get = function(options, callback) {
+internals.getList = function(options, callback) {
   request.get(
     'http://' + options.host + '/net/network_user_devices.lua?sid=' + options.sid,
     function(error, response, body) {
@@ -110,38 +152,80 @@ internals.get = function(options, callback) {
 };
 
 /**
+ * Get specific device settings
+ **/
+internals.get = function(options, device_id, callback) {
+
+  request.get(
+    'http://' + options.host + '/net/edit_device.lua?dev=' + device_id + '&sid=' + options.sid,
+    function(error, response, body) {
+
+      if(error) {
+        return callback(error);
+      }
+
+      callback(null, body);
+    }
+  );
+};
+
+internals.print = {};
+
+internals.print.list = function list(data) {
+  for(var i = 0; i < data.results.length; i++) {
+    if(data.results[i].state) {
+      console.log('  [*] ' + data.results[i].id + ' - ' + data.results[i].name + ' (' + data.results[i].connection + ') IP: ' + data.results[i].address + ' MAC: ' + data.results[i].mac);
+    } else {
+      var row = '  [ ] ' + data.results[i].id + ' - ' + data.results[i].name;
+      if(data.results[i].connection) {
+        row += ' (' + data.results[i].connection + ')';
+      }
+      console.log(row);
+    }
+  }
+};
+
+/*
+dev_name:blackbox
+static_dhcp:on
+kisi_profile:filtprof1
+auto_wakeup:on
+btn_wake:
+back_to_page:/net/network_user_devices.lua
+dev:landevice3814
+last_action:
+*/
+internals.print.info = function list(data) {
+
+  console.log('  Device: ' + data.result.dev_name);
+  console.log('  Static address: ' + data.result.static_dhcp);
+  console.log('  Child security profile: ' + data.result.kisi_profile);
+  console.log('  Auto Wake On LAN: ' + data.result.dev_name);
+};
+
+/**
  * The exposed function
  **/
 module.exports = function main(options, params, callback) {
 
   if(!params.length) {
-    console.log('Missing parameter.\nUsage: node index.js devices [list]');
+    console.log('Missing parameter.\nUsage: node index.js devices [list|info <device_id>]');
     return;
   }
 
-  if(['list'].indexOf(params[0]) === -1) {
-    console.log('Wrong parameter.\nUsage: node index.js devices [list]');
+  if(['list', 'info'].indexOf(params[0]) === -1) {
+    console.log('Wrong parameter.\nUsage: node index.js devices [list|info <device_id>]');
     return;
   }
 
-  module.exports[params[0]].call(null, options, params, function(err, data) {
+  module.exports[params[0]].call(null, options, params.slice(1), function(err, data) {
 
     if(err) {
       return callback(err);
     }
 
     if(options.print) {
-      for(var i = 0; i < data.results.length; i++) {
-        if(data.results[i].state) {
-          console.log('  [*] ' + data.results[i].id + ' - ' + data.results[i].name + ' (' + data.results[i].connection + ') IP: ' + data.results[i].address + ' MAC: ' + data.results[i].mac);
-        } else {
-          var row = '  [ ] ' + data.results[i].id + ' - ' + data.results[i].name;
-          if(data.results[i].connection) {
-            row += ' (' + data.results[i].connection + ')';
-          }
-          console.log(row);
-        }
-      }
+      internals.print[params[0]](data);
     }
 
     callback(null, data);
@@ -153,13 +237,32 @@ module.exports = function main(options, params, callback) {
  **/
 module.exports.list = function list(options, params, callback) {
 
-  internals.get(options, function(error, body) {
+  internals.getList(options, function(error, body) {
 
       if(error) {
         return callback(error);
       }
 
-      internals.readHTML(body, callback);
+      internals.readTables(body, callback);
     }
   );
+};
+
+/**
+ * Retrieves information about a device
+ **/
+module.exports.info = function info(options, params, callback) {
+
+  if(params.length === 0) {
+    return callback(new Error('Missing device id'));
+  }
+
+  internals.get(options, params[0], function(error, body) {
+
+    if(error) {
+      return callback(error);
+    }
+
+    internals.readForm(body, callback);
+  });
 };
