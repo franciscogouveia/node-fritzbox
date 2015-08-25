@@ -6,8 +6,9 @@
   "repository": "git@github.com:franciscogouveia/node-fritzbox.git",
   "preferGlobal": true,
   "bin": {
-    "filesearch": "bin/node-fritzbox"
+    "node-fritzbox": "bin/node-fritzbox"
   },
+  "main": "./index.js",
   "scripts": {
     "test": "lab -v"
   },
