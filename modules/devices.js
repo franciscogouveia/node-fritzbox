@@ -207,9 +207,9 @@ internals.print.list = function list(data) {
 internals.print.info = function list(data) {
 
   console.log('  Device: ' + data.result.dev_name);
-  console.log('  Static address: ' + data.result.static_dhcp);
+  console.log('  Static address: ' + (data.result.static_dhcp === ''?'off':'on'));
   console.log('  Child security profile: ' + data.result.kisi_profile);
-  console.log('  Auto Wake On LAN: ' + data.result.dev_name);
+  console.log('  Auto Wake On LAN: ' + (data.result.auto_wakeup === ''?'off':'on'));
 };
 
 /**
