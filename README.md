@@ -2,9 +2,7 @@
 
 Setup your Fritz!Box from the command line. Or just use it as an API in your node project.
 
-#### Warning
-
-Use this software at your own risk.
+`Warning` Use this software at your own risk.
 
 #### Running it in the command line
 
@@ -74,6 +72,8 @@ And you should be good to go.
 #### Tested devices
 
 * Fritz!Box 7362 SL (Fritz!OS 06.30)
+
+----
 
 #### LICENCE
 
