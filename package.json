@@ -1,9 +1,13 @@
 {
   "name": "node-fritzbox",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Access the Fritzbox through node",
   "main": "index.js",
   "repository": "git@github.com:franciscogouveia/node-fritzbox.git",
+  "preferGlobal": true,
+  "bin": {
+    "filesearch": "bin/node-fritzbox"
+  },
   "scripts": {
     "test": "lab -v"
   },
@@ -12,7 +16,14 @@
     "box",
     "api"
   ],
-  "author": "'Francisco de Gouveia' <francisco@de-gouveia.eu>",
+  "author": {
+    "name": "Francisco de Gouveia",
+    "email": "francisco@de-gouveia.eu",
+    "url": "http://de-gouveia.eu"
+  },
+  "bugs": {
+    "url": "https://github.com/franciscogouveia/node-fritzbox/issues"
+  },
   "license": "MIT",
   "dependencies": {
     "dotenv": "^1.2.0",
