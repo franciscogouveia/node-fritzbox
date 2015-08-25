@@ -2,30 +2,17 @@
 
 Setup your Fritz!Box from the command line. Or just use it as an API in your node project.
 
-#### Warning
+`Warning` Use this software at your own risk.
 
-Use this software at your own risk.
+#### Running it in the command line
 
-#### Setup
-
-Setup the environment variables:
-
-* `FB_HOST` (optional - default: fritz.box)
-* `FB_PASSWORD` (optional and **not recommended** - default: asks input)
-
-Alternatively, you can create a `.env` file with this environment variables.
-
-Then,
+First of all, install it:
 
 ```
-npm install
+npm install node-fritzbox
 ```
 
-And you should be good to go.
-
-#### Usage
-
-At the moment it is possible to:
+Then, just use it. At the moment it is possible to:
 
 * List devices (connected and disconnected)
 * Get device info
@@ -37,42 +24,56 @@ At the moment it is possible to:
 ##### List devices
 
 ```
-node index devices list
+node-fritzbox devices list
 ```
 
 ##### Get device info
 
 ```
-node index devices info device_id
+node-fritzbox devices info device_id
 ```
 
 ##### Wake device
 
 ```
-node index devices wake device_id
+node-fritzbox devices wake device_id
 ```
 
 ##### List port-forwarding rules
 
 ```
-node index port-forwarding list
+node-fritzbox port-forwarding list
 ```
 
 ##### Enable port-forwarding rules
 
 ```
-node index port-forwarding enable active_1 active_2 ...
+node-fritzbox port-forwarding enable active_1 active_2 ...
 ```
 
 ##### Disable port-forwarding rules
 
 ```
-node index port-forwarding disable active_1 active_2 ...
+node-fritzbox port-forwarding disable active_1 active_2 ...
 ```
+
+#### Setup
+
+You can set up environment variables to change the address of Fritz!Box (in case you are not using the defaults). Optionally, you can also define the password, so that you don't have to type it all the time.
+
+The configurable environment variables are:
+
+* `FB_HOST` (optional - default: fritz.box)
+* `FB_PASSWORD` (optional and **not recommended** - default: asks input)
+
+And you should be good to go.
+
 
 #### Tested devices
 
 * Fritz!Box 7362 SL (Fritz!OS 06.30)
+
+----
 
 #### LICENCE
 
