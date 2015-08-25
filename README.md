@@ -32,8 +32,8 @@ Results in
 ```
   [*] landevice3807 - Laptop (LAN 1 mit 1 Gbit/s) IP: 192.168.1.2 MAC: AA:AA:AA:AA:AA:AA
   [*] landevice3814 - Desktop (LAN 1 mit 1 Gbit/s) IP: 192.168.1.3 MAC: BB:BB:BB:BB:BB:BB
-  [*] landevice3802 - Mobile-Phone-1 (WLAN) IP: 192.168.1.3 MAC: CC:CC:CC:CC:CC:CC
-  [*] landevice3815 - Wireless-Speaker (WLAN) IP: 192.168.1.4 MAC: DD:DD:DD:DD:DD:DD
+  [*] landevice3802 - Mobile-Phone-1 (WLAN) IP: 192.168.1.4 MAC: CC:CC:CC:CC:CC:CC
+  [*] landevice3815 - Wireless-Speaker (WLAN) IP: 192.168.1.5 MAC: DD:DD:DD:DD:DD:DD
   [ ] landevice3806 - Other-Laptop
   [ ] landevice3818 - Mobile-Phone-2 (WLAN)
 ```
@@ -76,9 +76,11 @@ node-fritzbox port-forwarding list
 
 Results in
 
+```
   * active_1 - HTTP-Server (state: enabled)
   * active_2 - HTTPS-Server (state: disabled)
   * active_3 - SSH (state: enabled)
+```
 
 ##### Enable port-forwarding rules
 
