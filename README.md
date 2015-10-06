@@ -14,12 +14,24 @@ npm install node-fritzbox
 
 Then, just use it. At the moment it is possible to:
 
+* Obtain external IP address
 * List devices (connected and disconnected)
 * Get device info
 * Send WOL packet to device
 * List port-forwarding rules
 * Enable / disable port-forwarding rules
 
+##### Obtain external IP address
+
+```
+node-fritzbox online ip
+```
+
+Results in
+
+```
+Current online IP: XXX.XXX.XXX.XXX
+```
 
 ##### List devices
 
