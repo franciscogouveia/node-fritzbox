@@ -1,14 +1,13 @@
 {
   "name": "node-fritzbox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Access the Fritzbox through node",
-  "main": "index.js",
+  "main": "./index.js",
   "repository": "git@github.com:franciscogouveia/node-fritzbox.git",
   "preferGlobal": true,
   "bin": {
     "node-fritzbox": "bin/node-fritzbox"
   },
-  "main": "./index.js",
   "scripts": {
     "test": "lab -v"
   },
