@@ -123,9 +123,51 @@ The configurable environment variables are:
 And you should be good to go.
 
 
+### JavaScript API
+This is how to use the JavaScript API.
+
+#### Authentication
+
+    const fritzBox = {};
+    fritzBox.auth = require('node-fritzbox/modules/login');
+    const FRITZBOX_PASSWORD = 'mypassword';
+    const HOST = 'fritz.box';
+
+    fritzBox.auth({host: HOST}, [FRITZBOX_PASSWORD], function(err, result) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+
+        var sid = result.sid;
+        console.log('Login successful. SID: ' + sid);
+
+        //do authenticated calls
+    });
+
+
+#### List devices
+
+    const fritzBox = {};
+    fritzBox.devices = require('node-fritzbox/modules/devices');
+    const HOST = 'fritz.box';
+
+    //first, authenticate and obtain an SID
+
+    fritzBox.devices.list({host: HOST, sid: sid}, null, function(err, result) {
+        if(err) {
+          console.log(err);
+          return;
+        }
+
+        console.log(result);
+    });
+
+
 #### Tested devices
 
 * Fritz!Box 7362 SL (Fritz!OS 06.30)
+* Fritz!Box 7272 (Fritz!OS 06.30)
 
 ----
 
